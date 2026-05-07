@@ -107,10 +107,15 @@
                 const id = row[idxMap.id];
                 const parentField = idxMap.parent !== -1 ? (row[idxMap.parent] || "") : "";
                 const category = idxMap.category !== -1 ? (row[idxMap.category] || "미분류") : "미분류";
-                const status = row[idxMap.status];
+                let   status = row[idxMap.status];
                 const title = row[idxMap.title];
                 const modDate = idxMap.change !== -1 ? parseDate(row[idxMap.change]) : null;
-                const progress = idxMap.progress !== -1 ? (parseInt(row[idxMap.progress]) || 0) : 0;
+                let   progress = idxMap.progress !== -1 ? (parseInt(row[idxMap.progress]) || 0) : 0;
+                
+                if (progress >= 100) {
+                    status = '완료';
+                    progress = 100;
+                }
 
                 const parentMatch = parentField.match(/#?(\d+)/);
                 const hasParent = !!parentMatch;
@@ -188,7 +193,14 @@
                     output += `  - #${gid}\n`;
                 }
                 g.items.forEach(t => {
-                    output += `      . [${t.status}] ${t.title} (${t.progress}%)\n`;
+                    let progressText = '';
+
+                    if (t.status !== '완료') {
+                        progressText = ` (${t.progress}%)`;
+                    }
+
+                    output += `      . [${t.status}] ${t.title}${progressText}\n`;
+                    // output += `      . [${t.status}] ${t.title} (${t.progress}%)\n`;
                 });
             });
             output += `\n`;
