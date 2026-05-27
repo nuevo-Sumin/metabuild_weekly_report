@@ -141,14 +141,14 @@
         monday.setDate(diffToMonday);
         monday.setHours(0,0,0,0);
 
-        const sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
-        sunday.setHours(23,59,59,999);
+        const friday = new Date(monday);
+        friday.setDate(monday.getDate() + 4);
+        friday.setHours(23,59,59,999);
 
         const reportTasks = tasks.filter(t => {
             if (t.status === '신규' || t.status === '진행중') return true;
             if (t.status === '완료') {
-                return t.modDate && t.modDate >= monday && t.modDate <= sunday;
+                return t.modDate && t.modDate >= monday && t.modDate <= friday;
             }
             return false;
         });
@@ -166,10 +166,10 @@
         });
 
         // 출력 생성
-        let output = `## 주간업무보고 (${monday.toLocaleDateString()} ~ ${sunday.toLocaleDateString()})\n\n`;
+        let output = `## 주간업무보고 (${monday.toLocaleDateString()} ~ ${friday.toLocaleDateString()})\n\n\n`;
         
         if (pmOption === 'include') {
-            output += `(1) 사업관리\n   - 주간업무보고 작성\n   - 기타내용 작성하세요 ... \n\n`;
+            output += `(1) 사업관리\n   - 주간업무보고 작성\n   - 기타내용 작성하세요 ... \n\n\n`;
             output += `(2) 수행\n`;
         } else {
             output += `(1) 수행\n`;
